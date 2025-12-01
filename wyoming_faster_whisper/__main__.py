@@ -95,6 +95,25 @@ async def main() -> None:
         version=__version__,
         help="Print version and exit",
     )
+    parser.add_argument(
+        "--batching",
+        default=False,
+        type=bool,
+        help="Enable batching",
+    )
+    parser.add_argument(
+        "--batch-size",
+        default=8,
+        type=int,
+        help="batch size",
+    )
+    parser.add_argument(
+        "--num-workers",
+        default=1,
+        type=int,
+        help="num workers",
+    )
+
     args = parser.parse_args()
 
     if not args.download_dir:
@@ -221,6 +240,7 @@ async def main() -> None:
             device=args.device,
             compute_type=args.compute_type,
             cpu_threads=args.cpu_threads,
+            num_workers=args.num_workers,
         )
 
     server = AsyncServer.from_uri(args.uri)
@@ -292,7 +312,7 @@ async def main() -> None:
     else:
         # faster-whisper
         from .faster_whisper_handler import FasterWhisperEventHandler
-
+        
         assert isinstance(whisper_model, faster_whisper.WhisperModel)
         await server.run(
             partial(

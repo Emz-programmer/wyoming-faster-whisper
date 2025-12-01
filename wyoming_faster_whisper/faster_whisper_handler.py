@@ -72,6 +72,7 @@ class FasterWhisperEventHandler(AsyncEventHandler):
                     beam_size=self.cli_args.beam_size,
                     language=self._language,
                     initial_prompt=self.initial_prompt,
+                    vad_filter=True,
                 )
 
             text = " ".join(segment.text for segment in segments)
